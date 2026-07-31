@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Nutné pro komunikaci s lokálním webserverem -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <!-- Testovací HW oprávnění pro náš JS Bridge -->
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="false"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_launcher"
         android:label="Termux Shell"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:networkSecurityConfig="@xml/network_security_config">
