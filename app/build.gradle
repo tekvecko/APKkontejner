@@ -5,14 +5,13 @@ plugins {
 
 android {
     namespace 'com.example.termuxshell'
-    // Zacíleno na nejmodernější Android API pro maximální kompatibilitu
-    compileSdk 36
+    // Sníženo z experimentálního 36 na stabilní 35
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.example.termuxshell"
-        // Zajišťuje funkčnost moderního WebView API
         minSdk 26
-        targetSdk 36
+        targetSdk 35
         versionCode 1
         versionName "1.0"
     }
@@ -35,5 +34,4 @@ android {
 dependencies {
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    // Dále necháváme modul co nejtenčí, frontend a logiku dodává backend
 }
