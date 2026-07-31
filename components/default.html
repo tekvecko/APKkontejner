@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Default Component</title>
+    <script>
+        // Identifikátor aktuální komponenty pro párování updatů z backendu
+        const COMPONENT_NAME = 'default.html';
+        
+        function connectWebSocket() {
+            const ws = new WebSocket('ws://127.0.0.1:5000/ws/bridge');
+            
+            ws.onopen = () => {
+                console.log('WS Připojeno');
+                document.getElementById('ws-status').innerText = '🟢 Připojeno k API Node';
+                ws.send(JSON.stringify({type: 'INIT', payload: COMPONENT_NAME}));
+            };
+            
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                console.log('Zpráva z API Node:', data);
+                
+                // Naslouchání na signál k aktualizaci
+                if (data.command === 'COMPONENT_UPDATED' && data.action === 'RELOAD') {
+                    if (data.component_name === COMPONENT_NAME || data.component_name === 'ALL') {
+                        console.log('Detekována nová verze kontejneru, provádím reload...');
+                        window.location.reload();
+                    }
+                }
+                
+                // Prostor pro další nativní příkazy (např. volání Android hardware bridge)
+                if (data.command === 'VIBRATE' && window.AndroidBridge) {
+                    window.AndroidBridge.vibrate(data.duration);
+                }
+            };
+            
+            ws.onclose = () => {
+                document.getElementById('ws-status').innerText = '🔴 Odpojeno (pokus o reconnect za 3s)';
+                setTimeout(connectWebSocket, 3000);
+            };
+        }
+        
+        // Spuštění spojení po načtení DOMu
+        window.onload = connectWebSocket;
+    </script>
+</head>
+<body style="font-family: sans-serif; padding: 20px; background: #f4f4f9;">
+    <h2>Základní kontejner</h2>
+    <p>Tento UI prvek je dynamicky spravován z Termux backendu.</p>
+    <div id="ws-status" style="margin-top: 20px; font-weight: bold; font-size: 0.9em; color: #333;">🟡 Připojování...</div>
+</body>
+</html>
